@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonioaey Payment</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #ffffff 0%, #fff0f6 50%, #f0f7ff 100%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+            color: #8c6b56;
+        }
+
+        /* --- เอฟเฟกต์ฟองสบู่พื้นหลัง Overload --- */
+        .soap-bubble {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- กรอบแก้วใส (Glassmorphism) ตามภาพที่ 4 - เพิ่มลูกเล่น x2 --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            /* เพิ่ม Neon Glow รอบกรอบ */
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.1), 0 0 10px rgba(244, 114, 182, 0.1);
+            position: relative;
+        }
+
+        .inner-glass {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 18px;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        /* --- ปรับแต่งหัวร้าน (Header) ให้เด่นขึ้น x2 --- */
+        .store-header {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(244, 114, 182, 0.3);
+            /* แสง Glow สีชมพู */
+            box-shadow: 0 0 15px rgba(244, 114, 182, 0.15);
+        }
+
+        /* --- เอฟเฟกต์ฟองตอนกดปุ่ม --- */
+        .pop-bubble {
+            position: absolute;
+            width: 10px; height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: bubblePop 0.6s ease-out forwards;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(2) translateY(-30px); opacity: 0; }
+        }
+
+        /* --- Utilities --- */
+        .bounce-hover:hover {
+            transform: translateY(-3px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4 relative">
+
+    <script>
+        function createBackgroundBubbles() {
+            // เพิ่มจำนวนฟองเยอะขึ้นเป็น 30 ฟอง
+            const bubbleCount = 30;
+            for (let i = 0; i < bubbleCount; i++) {
+                let bubble = document.createElement('div');
+                bubble.className = 'soap-bubble';
+                let size = Math.random() * 50 + 10 + 'px';
+                bubble.style.width = size;
+                bubble.style.height = size;
+                bubble.style.left = Math.random() * 100 + 'vw';
+                bubble.style.animationDuration = Math.random() * 8 + 7 + 's';
+                bubble.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(bubble);
+            }
+        }
+        window.addEventListener('load', createBackgroundBubbles);
+    </script>
+
+    <div id="toast" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-md text-pink-500 px-6 py-2 rounded-full shadow-lg transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none z-50 flex items-center gap-2 font-bold text-sm border border-pink-100">
+        ✨ คัดลอกสำเร็จ ✨
+    </div>
+
+    <div class="relative z-10 mb-8 w-full max-w-sm">
+        <div class="store-header py-5 px-6 text-center border-pink-100 hover:scale-105 transition-transform hover:shadow-pink-100">
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-wide text-brown-600">
+                Nonioaey <span class="text-pink-400">Payment</span>
+            </h1>
+            <div class="h-1 w-10 bg-pink-100 mx-auto mt-2 rounded-full border border-pink-200"></div>
+        </div>
+    </div>
+
+    <div class="max-w-md w-full relative z-10 space-y-6">
+        
+        <div class="absolute -top-4 -right-2 w-12 h-12 bg-pink-100/50 rounded-full blur-xl animate-pulse"></div>
+        <div class="absolute bottom-1/2 -left-8 w-16 h-16 bg-blue-50/50 rounded-full blur-xl animate-pulse"></div>
+
+        <div class="glass-card p-2 shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-pink-200">
+            <div class="absolute -top-1 -left-1 z-20">
+                <div class="w-8 h-8 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center shadow-sm border border-pink-50 text-base">🎀</div>
+            </div>
+            
+            <img src="IMG_6900.jpeg" alt="IMG_6900.jpeg" class="w-full h-auto object-cover rounded-[22px] shadow-inner" onerror="this.src='https://placehold.co/600x600/ffffff/f472b6?text=IMG_6900.jpeg'">
+        </div>
+
+        <div class="glass-card px-6 py-4 border-pink-100 shadow-pink-50/50">
+            <div class="text-center">
+                <div class="inner-glass p-3 border-dashed border-pink-200">
+                    <p class="text-xl font-extrabold text-pink-500">How to Pay</p>
+                </div>
+                <p class="text-[13px] font-medium text-brown-500 leading-relaxed mt-2.5">จิ้มปุ่มเพื่อคัดลอกข้อมูล แล้วนำไปโอนในแอปได้เลยค่ะ</p>
+            </div>
+        </div>
+
+        <div class="glass-card px-5 py-6 shadow-sm space-y-5">
+            
+            <div class="inner-glass p-4 text-center border-pink-100">
+                <p class="text-[15px] font-bold text-brown-600 leading-relaxed">
+                    อย่าลืมโน๊ตสลิปกันนะคะ <br>
+                    <span class="text-pink-500 font-extrabold text-lg">หากลืมโน๊ตสลิปโอนมาใหม่ 0.1 พร้อมโน๊ตสลิป</span>
+                </p>
+            </div>
+
+            <div class="text-center py-1">
+                <p class="text-[11px] text-brown-400 font-bold uppercase tracking-widest mb-1.5">Account Name</p>
+                <p class="text-2xl font-bold text-brown-600">ศศิกานต์ น้ำเขียว</p>
+            </div>
+            
+            <div class="inner-glass p-3 text-[12px] text-center border-pink-50">
+                <p class="leading-relaxed">
+                    โอนเเล้วส่งสลิปไว้ได้ในเเชทเลยค่ะ <br>
+                    <span class="text-pink-400 font-bold underline decoration-pink-200 underline-offset-4">โอนแล้วแปะ<span class="text-pink-500">โน๊ตสลิป</span>ให้ด้วยน้า</span>
+                </p>
+            </div>
+
+            <div class="space-y-3 pt-2">
+                <div class="inner-glass p-3 flex items-center justify-between hover:bg-white/50 transition-all border-green-50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-50 text-green-600 rounded-xl flex items-center justify-center font-bold text-xl border border-green-100 shadow-sm">K</div>
+                        <div>
+                            <p class="text-[10px] text-brown-400 font-bold uppercase tracking-widest mb-0.5">K-Bank (อนุสรา)</p>
+                            <p class="font-bold tracking-wider text-green-600 text-base">131-1-45867-8</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('1311458678', this)" class="bounce-hover px-5 py-2 bg-white/80 text-pink-400 border border-pink-100 rounded-full text-[11px] font-bold shadow-sm relative overflow-hidden">
+                        คัดลอก
+                    </button>
+                </div>
+
+                <div class="inner-glass p-3 flex items-center justify-between hover:bg-white/50 transition-all border-orange-50 relative">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-orange-50 text-orange-500 rounded-xl flex items-center justify-center font-bold text-xl border border-orange-100 shadow-sm">W</div>
+                        <div>
+                            <p class="text-[10px] text-brown-400 font-bold uppercase tracking-widest mb-0.5">Wallet (อนุสรา)</p>
+                            <p class="font-bold tracking-wider text-orange-500 text-base">0826348896</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-1.5 items-end">
+                        <button onclick="copyText('0826348896', this)" class="bounce-hover px-5 py-2 bg-white/80 text-pink-400 border border-pink-100 rounded-full text-[11px] font-bold shadow-sm relative overflow-hidden">
+                            คัดลอก
+                        </button>
+                        <a href="https://tmn.app.link/nEoPnxQ9R1b" target="_blank" class="bounce-hover bg-orange-50 text-orange-600 font-semibold px-4 py-1.5 rounded-full text-[10px] text-center border border-orange-100 hover:bg-orange-100">
+                            เปิดแอป Wallet
+                        </a>
+                    </div>
+                </div>
+
+                <div class="inner-glass p-3 flex items-center justify-between bg-pink-50/20 border-pink-100">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-pink-400 text-white rounded-xl flex items-center justify-center text-base shadow-sm">📝</div>
+                        <div>
+                            <p class="text-[10px] text-pink-400 font-bold uppercase tracking-widest mb-0.5">Copy Note (โน๊ตสลิป)</p>
+                            <p class="font-bold text-brown-500 text-sm tracking-tight">ซื้อขายกับFb:Nonioaey</p>
+                        </div>
+                    </div>
+                    <button onclick="copyText('ซื้อขายกับFb:Nonioaey', this)" class="bounce-hover px-5 py-2 bg-pink-400 text-white rounded-full text-[11px] font-bold shadow-md relative overflow-hidden">
+                        คัดลอก
+                    </button>
+                </div>
+
+                <div class="text-center text-[10px] text-brown-300 font-medium pt-3 border-t border-dashed border-pink-100 mt-3">
+                    * ทรูมันนี่วอเลท รบกวนบวกค่าธรรมเนียม +2 บาทนะคะ *
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-dashed border-pink-100 space-y-4">
+                <h3 class="text-center font-bold text-brown-600 text-base tracking-tight">📱 ช่องทางติดต่อเพิ่มเติม</h3>
+                
+                <div class="flex flex-col sm:flex-row gap-3.5 justify-center items-center">
+                    <a href="https://www.facebook.com/share/18W6w2niHC/?mibextid=wwXIfr" target="_blank" class="bounce-hover bg-white/60 text-sky-600 font-medium px-5 py-2.5 rounded-full flex items-center gap-2.5 border border-sky-100 shadow-sm glass-card text-[13px] w-full sm:w-auto justify-center inner-glass hover:bg-white transition-all">
+                        <svg class="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Nonioaey FB
+                    </a>
+                    <a href="https://line.me/ti/p/LdBBk1Es5q" target="_blank" class="bounce-hover bg-white/60 text-green-600 font-medium px-5 py-2.5 rounded-full flex items-center gap-2.5 border border-green-100 shadow-sm glass-card text-[13px] w-full sm:w-auto justify-center inner-glass hover:bg-white transition-all">
+                        <svg class="w-4.5 h-4.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.97 3.61 9.09 8.36 9.87.19.03.36-.08.36-.28v-1.5c-3.17.69-3.84-1.53-3.84-1.53-.52-1.32-1.27-1.67-1.27-1.67-1.03-.71.08-.69.08-.69 1.14.08 1.74 1.17 1.74 1.17 1.01 1.73 2.65 1.23 3.3.94.1-.73.4-1.23.72-1.51-2.53-.29-5.18-1.26-5.18-5.61 0-1.24.44-2.25 1.17-3.04-.12-.28-.51-1.44.11-2.99 0 0 .95-.3 3.12 1.16a10.8 10.8 0 0 1 2.8-.38c.95.01 1.9.13 2.8.38 2.16-1.47 3.11-1.16 3.11-1.16.62 1.55.23 2.71.11 2.99.73.79 1.17 1.8 1.17 3.04 0 4.36-2.66 5.31-5.19 5.6.4.35.77 1.04.77 2.09v3.1c0 .2.17.32.36.28C20.39 21.09 24 16.97 24 12c0-5.52-4.48-10-10-10z"/></svg>
+                        Nonioaey LINE
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-4 text-center flex items-center justify-center gap-1.5 text-[11px] text-brown-400 border-t border-dashed border-pink-100">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-pink-300 relative z-10 bounce-hover">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                </svg>
+                <span class="relative z-10">Nonioaey Payment Gateway (โอนแล้วแจ้งสลิปในแชทได้เลยค่ะ)</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function createClickBubbles(btn) {
+            // สร้างเอฟเฟกต์ฟองสบู่พุ่งกระจายรอบปุ่มเวลาคลิก x2
+            for (let i = 0; i < 12; i++) {
+                let bubble = document.createElement('div');
+                bubble.className = 'pop-bubble';
+                bubble.style.left = Math.random() * 80 + 10 + '%';
+                bubble.style.top = '50%';
+                // สุ่มขนาดฟอง
+                let size = Math.random() * 12 + 4 + 'px';
+                bubble.style.width = size;
+                bubble.style.height = size;
+                // สุ่มสีชมพูจางๆ
+                bubble.style.background = 'rgba(255, 182, 193, 0.6)';
+                btn.appendChild(bubble);
+                setTimeout(() => bubble.remove(), 700);
+            }
+        }
+
+        function copyText(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                
+                // แสดง Popup แจ้งเตือน
+                showToast();
+
+                // เอฟเฟกต์ฟองสบู่ที่ปุ่ม x2
+                createClickBubbles(btn);
+
+                // เปลี่ยนคำที่ปุ่มสำเร็จตามสั่ง
+                const originalText = btn.innerHTML;
+                const originalClass = btn.className;
+                
+                btn.innerHTML = '✨ คัดลอกสำเร็จ ✨';
+                btn.classList.add('bg-pink-400', 'text-white', 'border-transparent', 'scale-95');
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-pink-400', 'text-white', 'border-transparent', 'scale-95');
+                }, 2000);
+
+            } catch (err) {
+                console.error('ไม่สามารถคัดลอกได้:', err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-0', '-translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-4');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
